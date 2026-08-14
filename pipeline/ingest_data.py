@@ -31,6 +31,19 @@ parse_dates = [
 ]
 
 
+def run_zones(engine):
+    url = 'https://datasets-documentation.s3.eu-west-3.amazonaws.com/nyc-taxi/taxi_zone_lookup.csv'
+    
+    
+    df = pd.read_csv(url)
+    df.to_sql(name='zones_lookup', con=engine, if_exists='replace', index=False)
+    
+    
+    
+
+        
+
+
 @click.command()
 @click.option('--pg-user', default='root', help='PostgreSQL user')
 @click.option('--pg-password', default='root', help='PostgreSQL password')
@@ -66,6 +79,8 @@ def run(pg_user, pg_password, pg_host, pg_port, pg_db, year, month, target_table
             first = False
     
         df_chunk.to_sql(name=target_table, con=engine, if_exists='append')
+        
+    run_zones(engine)
 
 
 

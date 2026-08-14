@@ -1,0 +1,17 @@
+postgres container:
+sudo docker run -it --rm --network=pg-network --name pgdatabase -e POSTGRES_USER="root" -e POSTGRES_PASSWORD="root" -e POSTGRES_DB="ny_taxi_db" -v ny_taxi_postgres_data:/var/lib/postgresql -p 5431:5432 postgres:18
+
+running pgcli:
+uv run pgcli -h localhost -p 5431 -u root -d ny_taxi
+
+
+run containerized ingest_data script
+sudo docker run -it \
+  --network=pg-network \
+  taxi_ingest:v001 \
+    --pg-user=root \
+    --pg-password=root \
+    --pg-host=pgdatabase \
+    --pg-port=5432 \
+    --pg-db=ny_taxi \
+    --target-table=yellow_taxi_trips
